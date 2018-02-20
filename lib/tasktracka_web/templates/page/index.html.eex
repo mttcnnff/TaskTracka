@@ -1,22 +1,22 @@
 <div class="row">
 	<div class="col">
+		<div class="jumbotron">
+			<h1 class="display-4">Welcome!</h1>
+			<p class="lead">This is a simple To Do List App made to learn the Phoenix web development framework.</p>
+		</div>
+	</div>
+	<div class="col">
 		<h1>Log In</h1>
-		<%= if @conn.assigns.current_user do %>
-		<h2>Logged In</h2>
-
-		<% else %>
-			<h2>Logged Out</h2>
-			<%= form_tag("/session", method: :post) do %>
-		      <div class="form-group">
-		        Email
-		        <input type="email" name="email" placeholder="user@example.com" >
-		      </div>
-		      <!-- passwords come later -->
-		      <div class="form-group">
-		        <button class="btn btn-primary">Log in</button>
-		        <%= link "Register", to: user_path(@conn, :new) %>
-		      </div>
-		    <% end %>
-		<% end %>
+		<%= form_tag("/session", method: :post) do %>
+	      <div class="form-group">
+	        Email
+	        <input type="email" name="email" placeholder="user@example.com" >
+	      </div>
+	      <!-- passwords come later -->
+	      <div class="form-group">
+	        <button class="btn btn-primary">Log in</button>
+	        <%= link "Register", to: user_path(@conn, :new) %>
+	      </div>
+	    <% end %>
 	</div>
 </div>

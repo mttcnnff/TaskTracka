@@ -5,6 +5,7 @@ defmodule Tasktracka.Tracker do
 
   import Ecto.Query, warn: false
   alias Tasktracka.Repo
+  alias Ecto.Query
 
   alias Tasktracka.Tracker.Task
 
@@ -19,6 +20,13 @@ defmodule Tasktracka.Tracker do
   """
   def list_tasks do
     Repo.all(Task)
+    |> Repo.preload(:user)
+  end
+
+  def list_tasks_in_order do
+    query = from t in Task, order_by: [desc: t.id]
+    Repo.all(query)
+    |> Repo.preload(:user)
   end
 
   @doc """

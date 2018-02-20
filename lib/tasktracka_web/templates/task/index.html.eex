@@ -3,10 +3,12 @@
 <table class="table">
   <thead>
     <tr>
+      <th>ID</th>
       <th>Is completed</th>
       <th>Title</th>
       <th>Description</th>
       <th>Minutes worked</th>
+      <th>User</th>
 
       <th></th>
     </tr>
@@ -14,10 +16,12 @@
   <tbody>
 <%= for task <- @tasks do %>
     <tr>
+      <td><%= task.id %></td>
       <td><%= task.is_completed %></td>
       <td><%= task.title %></td>
       <td><%= task.description %></td>
       <td><%= task.minutes_worked %></td>
+      <td><%= task.user.name %></td>
 
       <td class="text-right">
         <span><%= link "Show", to: task_path(@conn, :show, task), class: "btn btn-default btn-xs" %></span>

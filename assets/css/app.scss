@@ -1,3 +1,13 @@
 /* This file is for your main application css. */
 
 @import "bootstrap";
+
+.task-heading {
+	margin: 0px;
+}
+
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

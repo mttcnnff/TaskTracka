@@ -25,10 +25,16 @@ defmodule TasktrackaWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
-    get "/todo", PageController, :index
+    
 
     resources "/users", UserController
     resources "/tasks", TaskController
+
+    get "/todo", PageController, :todo
+    post "/todo", PageController, :create_todo
+    get "/todo/:id", PageController, :edit_todo
+    post "/todo/delete/:id", PageController, :delete_todo
+    put "/todo/update/:id", PageController, :update_todo
 
     post "/session", SessionController, :create
     delete "/session", SessionController, :delete
