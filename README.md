@@ -1,4 +1,8 @@
 # Tasktracka
+## This is a basic web app built using the Phoenix Framework made to help keep track of ya tasks!
+* Register your user
+* Edit the todo list
+
 
 To start your Phoenix server:
 
