@@ -1,5 +1,9 @@
 export PORT=5300
+export MIX_ENV=prod
 export GIT_PATH=/home/tasktracka/src/TaskTracka 
+
+mix ecto.create
+mix ecto.migrate
 
 PWD=`pwd`
 if [ $PWD != $GIT_PATH ]; then

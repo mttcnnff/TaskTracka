@@ -57,11 +57,12 @@ config :logger, level: :info
 # Alternatively, you can configure exactly which server to
 # start per endpoint:
 #
-#     config :tasktracka, TasktrackaWeb.Endpoint, server: true
 #
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
 
-config :tasktracka, TasktrackaWeb.Endpoint,
-	secret_key_base: "THIS+IS+NOT+SECURE+DONT+USE+SESSION+COOKIES+WITHOUT+FIXING"
+import_config "prod.secret.exs"
+
+#config :tasktracka, TasktrackaWeb.Endpoint,
+#	secret_key_base: "THIS+IS+NOT+SECURE+DONT+USE+SESSION+COOKIES+WITHOUT+FIXING"
