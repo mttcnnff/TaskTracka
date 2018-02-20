@@ -5,10 +5,10 @@ defmodule TasktrackaWeb.TaskController do
   alias Tasktracka.Tracker.Task
   alias Tasktracka.Accounts
 
-  def index(conn, _params) do
-    tasks = Tracker.list_tasks()
-    render(conn, "index.html", tasks: tasks)
-  end
+  # def index(conn, _params) do
+  #   tasks = Tracker.list_tasks()
+  #   render(conn, "index.html", tasks: tasks)
+  # end
 
   def new(conn, _params) do
     changeset = Tracker.change_task(%Task{})
