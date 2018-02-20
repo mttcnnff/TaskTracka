@@ -33,12 +33,12 @@ defmodule TasktrackaWeb.TaskController do
     render(conn, "show.html", task: task)
   end
 
-  def edit(conn, %{"id" => id}) do
-    task = Tracker.get_task!(id)
-    changeset = Tracker.change_task(task)
-    users = Accounts.list_users()
-    render(conn, "edit.html", task: task, changeset: changeset, users: users)
-  end
+  # def edit(conn, %{"id" => id}) do
+  #   task = Tracker.get_task!(id)
+  #   changeset = Tracker.change_task(task)
+  #   users = Accounts.list_users()
+  #   render(conn, "edit.html", task: task, changeset: changeset, users: users)
+  # end
 
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tracker.get_task!(id)
