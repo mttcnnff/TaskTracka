@@ -3,5 +3,5 @@
 export PORT=5300
 
 cd ~/www/TaskTracka
-./bin/TaskTracka stop || true
-./bin/TaskTracka start
+./bin/tasktracka stop || true
+./bin/tasktracka start
