@@ -1,0 +1,20 @@
+<h2>Listing Timeblocks</h2>
+<%= form_for @changeset, nil, fn f -> %>
+
+  <div class="form-group">
+    <%= label f, :start, class: "control-label" %>
+    <%= datetime_select f, :start %>
+    <%= error_tag f, :start %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :end, class: "control-label" %>
+    <%= datetime_select f, :end %>
+    <%= error_tag f, :end %>
+  </div>
+
+  <div class="form-group">
+    <button type="button" class="btn btn-primary timeblock-button">Make Timeblock</button>
+    <span id="timeblock-error"></span>
+  </div>
+<% end %>

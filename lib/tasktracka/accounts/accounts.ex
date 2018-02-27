@@ -7,6 +7,7 @@ defmodule Tasktracka.Accounts do
   alias Tasktracka.Repo
 
   alias Tasktracka.Accounts.User
+  alias Tasktracka.Accounts.Manage
 
   @doc """
   Returns the list of users.
@@ -18,7 +19,22 @@ defmodule Tasktracka.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    Repo.all(User |> order_by(:id))
+    |> Repo.preload(:role)
+  end
+
+  def list_team_by_manager_id(manager_id) do
+    query = from m in Manage, where: m.manager_id == ^manager_id,
+      join: u in User, on: m.managee_id==u.id,
+      select: u
+    Repo.all(query)
+  end
+
+  def list_users_managers(user_id) do
+    query = from m in Manage, where: m.managee_id == ^user_id,
+      join: u in User, on: m.manager_id==u.id,
+      select: u
+    Repo.all(query)
   end
 
   @doc """
@@ -35,8 +51,8 @@ defmodule Tasktracka.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user(id), do: Repo.get(User, id)
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user(id), do: Repo.get(User, id) |> Repo.preload(:role)
+  def get_user!(id), do: Repo.get!(User, id) |> Repo.preload(:role)
 
   def get_user_by_email(email) do
     Repo.get_by(User, email: email)
@@ -64,6 +80,12 @@ defmodule Tasktracka.Accounts do
     |> Repo.insert()
   end
 
+  def make_manager(attrs \\ %{}) do
+    %Manage{}
+    |> Manage.changeset(attrs)
+    |> Repo.insert()
+  end
+
   @doc """
   Updates a user.
 
@@ -77,6 +99,8 @@ defmodule Tasktracka.Accounts do
 
   """
   def update_user(%User{} = user, attrs) do
+    IO.puts("USER = #{inspect(user)}")
+    IO.puts("\nATTRS = #{inspect(attrs)}")
     user
     |> User.changeset(attrs)
     |> Repo.update()
@@ -96,6 +120,21 @@ defmodule Tasktracka.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
+  end
+
+  def list_manages do
+    Repo.all(Manage |> order_by(:manager_id))
+  end
+
+  def list_managees_by_manager_id(manager_id) do
+    Repo.all(from m in Manage, where: m.manager_id == ^manager_id)
+    |> Repo.preload(:managee)
+  end
+
+  def delete_manager_rels(user_id) do
+    (from m in Manage,
+      where: m.manager_id == ^user_id)
+    |> Repo.delete_all()
   end
 
   @doc """

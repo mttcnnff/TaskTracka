@@ -7,26 +7,55 @@ defmodule TasktrackaWeb.PageController do
   alias Tasktracka.Accounts
 
   def index(conn, _params) do
-  	if conn.assigns.current_user do
-  		IO.puts("Render Home")
-  		conn
-  		|> redirect(to: page_path(conn, :todo))
-  	else
-  		IO.puts("Render Log In")
-  		render(conn, "index.html")
-  	end
+    if conn.assigns.current_user do
+      case conn.assigns.current_user.role.name do
+        "Admin" -> conn |> redirect(to: admin_path(conn, :index))
+        "User" -> conn |> redirect(to: page_path(conn, :todo))
+        "Manager" -> conn |> redirect(to: page_path(conn, :manage_todos))
+      end
+    else
+      render(conn, "index.html")
+    end
+  end
+
+  def profile(conn, _params) do
+    if conn.assigns.current_user do
+      user = conn.assigns.current_user
+      managers = Accounts.list_users_managers(user.id)
+      managees = Accounts.list_team_by_manager_id(user.id)
+      render(conn, TasktrackaWeb.UserView, "show.html", user: user, managers: managers, managees: managees)
+    else
+      conn
+      |> redirect(to: page_path(conn, :index))
+    end
   end
 
   def todo(conn, _params) do
   	if conn.assigns.current_user do
   		changeset = Tracker.change_task(%Task{})
-    	users = Accounts.list_users()
-    	tasks = Tracker.list_tasks_in_order()
+    	users = Accounts.list_team_by_manager_id(conn.assigns.current_user.id) 
+      |> Enum.to_list() 
+      users = [conn.assigns.current_user] ++ users
+    	tasks = Tracker.list_tasks_by_user_id(conn.assigns.current_user.id)
     	render(conn, "todo.html", changeset: changeset, users: users, tasks: tasks)
   	else
   		conn
   		|> redirect(to: page_path(conn, :index))
   	end
+  end
+
+  def manage_todos(conn, _params) do
+    user = conn.assigns.current_user
+    if user && user.role.name != "User" do
+      changeset = Tracker.change_task(%Task{})
+      users = Accounts.list_team_by_manager_id(conn.assigns.current_user.id)
+      tasks = Tracker.list_tasks_by_user_id(conn.assigns.current_user.id)
+      |> Enum.concat(Tracker.list_tasks_by_manager_id(conn.assigns.current_user.id))
+      render(conn, "manage_todo.html", changeset: changeset, users: users, tasks: tasks)
+    else
+      conn
+      |> redirect(to: page_path(conn, :index))
+    end
   end
 
   def create_todo(conn, %{"task" => task_params}) do
@@ -35,10 +64,10 @@ defmodule TasktrackaWeb.PageController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
-        |> redirect(to: page_path(conn, :todo))
+        |> redirect(to: page_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
         tasks = Tracker.list_tasks_in_order()
-        render(conn, "todo.html", changeset: changeset, users: users, tasks: tasks)
+        render(conn, "manage_todo.html", changeset: changeset, users: users, tasks: tasks)
     end
   end
 
@@ -62,7 +91,7 @@ defmodule TasktrackaWeb.PageController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
-        |> redirect(to: page_path(conn, :todo))
+        |> redirect(to: page_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
         tasks = Tracker.list_tasks_in_order()
         users = Accounts.list_users()
@@ -76,7 +105,7 @@ defmodule TasktrackaWeb.PageController do
 
     conn
     |> put_flash(:info, "Task deleted successfully.")
-    |> redirect(to: page_path(conn, :todo))
+    |> redirect(to: page_path(conn, :index))
   end
 
 end

@@ -12,7 +12,57 @@
     <%= @user.name %>
   </li>
 
+  <li>
+    <strong>Role:</strong>
+    <%= @user.role.name %>
+  </li>
+
 </ul>
 
 <span><%= link "Edit", to: user_path(@conn, :edit, @user) %></span>
+<%= if @current_user.role.name == "admin" do %>
 <span><%= link "Back", to: user_path(@conn, :index) %></span>
+<% end %>
+
+<h2>Managers</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for manager <- @managers do %>
+    <tr>
+      <td><%= manager.email %></td>
+      <td><%= manager.name %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= if @user.role.name == "Manager" do %>
+	<h2>Managees</h2>
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th>Email</th>
+	      <th>Name</th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	<%= for managee <- @managees do %>
+	    <tr>
+	      <td><%= managee.email %></td>
+	      <td><%= managee.name %></td>
+	    </tr>
+	<% end %>
+	  </tbody>
+	</table>
+<% end %>
+
+
+

@@ -28,9 +28,13 @@ defmodule TasktrackaWeb.Router do
     
 
     resources "/users", UserController
+    post "/users/add_managee", UserController, :add_managee
     resources "/tasks", TaskController
+    resources "/roles", RoleController
+    get "/profile", PageController, :profile
 
     get "/todo", PageController, :todo
+    get "/manage_todo", PageController, :manage_todos
     post "/todo", PageController, :create_todo
     get "/todo/:id", PageController, :edit_todo
     post "/todo/delete/:id", PageController, :delete_todo
@@ -38,6 +42,16 @@ defmodule TasktrackaWeb.Router do
 
     post "/session", SessionController, :create
     delete "/session", SessionController, :delete
+
+    resources "/admin", AdminController, only: [:index]
+    get "/admin/update", AdminController, :make_manager
+    get "/admin/remove_manager", AdminController, :remove_manager
+    get "/admin/list_manages", AdminController, :list_manages
+  end
+
+  scope "/api/v1", TasktrackaWeb do
+    pipe_through :api
+    resources "/timeblocks", TimeBlockController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.

@@ -1,6 +1,7 @@
 <div class="row">
 	<div class="col">
-		<h1>My Tasks</h1>
+		<h1>Team Task Report</h1>
+		<%= link "Edit Team", to: user_path(@conn, :index), class: "btn btn-primary btn-xs"%>
 		<div style="height: 500px; overflow-y: auto;">
 			<%= Enum.map @tasks, fn task -> %>
 				<div class="card" style="margin-bottom: 10px">

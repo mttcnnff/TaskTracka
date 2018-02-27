@@ -1,0 +1,40 @@
+<h2>Admin User Management</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Name</th>
+      <th>Role</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for user <- @users do %>
+    <tr>
+      <td><%= user.id %></td>
+      <td><%= user.email %></td>
+      <td><%= user.name %></td>
+      <td><%= user.role.name %></td>
+
+      <td class="text-right">
+        <%= if user.role.name != "Admin" do %>
+        <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        <% end %>
+
+        <span>
+          <%= case user.role.name do 
+              "User" -> link "Make Manager", to: admin_path(@conn, :make_manager, %{"user_id" => user.id}), class: "btn btn-warning btn-xs"
+              "Manager" -> link "Make User", to: admin_path(@conn, :remove_manager, %{"user_id" => user.id}), class: "btn btn-primary btn-xs"
+              "Admin" -> nil
+              end %>
+        </span>
+
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

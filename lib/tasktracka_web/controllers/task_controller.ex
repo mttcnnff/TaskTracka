@@ -3,12 +3,13 @@ defmodule TasktrackaWeb.TaskController do
 
   alias Tasktracka.Tracker
   alias Tasktracka.Tracker.Task
+  alias Tasktracka.Tracker.TimeBlock
   alias Tasktracka.Accounts
 
-  # def index(conn, _params) do
-  #   tasks = Tracker.list_tasks()
-  #   render(conn, "index.html", tasks: tasks)
-  # end
+  def index(conn, _params) do
+    tasks = Tracker.list_tasks()
+    render(conn, "index.html", tasks: tasks)
+  end
 
   def new(conn, _params) do
     changeset = Tracker.change_task(%Task{})
@@ -28,16 +29,17 @@ defmodule TasktrackaWeb.TaskController do
     end
   end
 
-  # def show(conn, %{"id" => id}) do
-  #   task = Tracker.get_task!(id)
-  #   render(conn, "show.html", task: task)
-  # end
+  def show(conn, %{"id" => id}) do
+    task = Tracker.get_task!(id)
+    render(conn, "show.html", task: task)
+  end
 
   def edit(conn, %{"id" => id}) do
     task = Tracker.get_task!(id)
     changeset = Tracker.change_task(task)
     users = Accounts.list_users()
-    render(conn, "edit.html", task: task, changeset: changeset, users: users)
+    timeblocks = Tracker.list_timeblocks()
+    render(conn, "edit.html", task: task, changeset: changeset, users: users, timeblocks: timeblocks)
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do

@@ -1,11 +1,11 @@
-<h2>Listing Users</h2>
+<h2>Users</h2>
 
 <table class="table">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Email</th>
       <th>Name</th>
+      <th>Role</th>
 
       <th></th>
     </tr>
@@ -13,18 +13,26 @@
   <tbody>
 <%= for user <- @users do %>
     <tr>
-      <td><%= user.id %></td>
       <td><%= user.email %></td>
       <td><%= user.name %></td>
+      <td><%= user.role.name %> </td>
 
       <td class="text-right">
-        <span><%= link "Show", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        <%= if user.role.name != "Admin" do %>
+          <%= if @current_user.role.name == "Manager" && @current_user.id != user.id do %>
+          <span><%= link "Manage", to: user_path(@conn, :add_managee, %{"user_id" => user.id}), method: :post, class: "btn btn-default btn-xs" %></span>
+          <% end %>
+          <span><%= link "Show", to: user_path(@conn, :show, user), class: "btn btn-default btn-xs" %></span>
+          <%= if @current_user.role.name == "Admin" do %>
+          <span><%= link "Edit", to: user_path(@conn, :edit, user), class: "btn btn-default btn-xs" %></span>
+          <span><%= link "Delete", to: user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+          <% end %>
+        <% end %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
-
+<%= if @current_user.role.name == "admin" do %>
 <span><%= link "New User", to: user_path(@conn, :new) %></span>
+<% end %>
