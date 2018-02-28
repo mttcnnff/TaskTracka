@@ -23,7 +23,7 @@ defmodule TasktrackaWeb.TaskController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
-        |> redirect(to: task_path(conn, :show, task))
+        |> redirect(to: NavigationHistory.last_path(conn))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset, users: users)
     end
@@ -34,11 +34,12 @@ defmodule TasktrackaWeb.TaskController do
     render(conn, "show.html", task: task)
   end
 
-  def edit(conn, %{"id" => id}) do
+  def edit(conn, %{"id" => id} = task) do
+    IO.puts("#{inspect(task)}")
     task = Tracker.get_task!(id)
     changeset = Tracker.change_task(task)
     users = Accounts.list_users()
-    timeblocks = Tracker.list_timeblocks()
+    timeblocks = Tracker.list_timeblocks_by_id(id)
     render(conn, "edit.html", task: task, changeset: changeset, users: users, timeblocks: timeblocks)
   end
 
@@ -49,7 +50,7 @@ defmodule TasktrackaWeb.TaskController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
-        |> redirect(to: task_path(conn, :show))
+        |> redirect(to: page_path(conn, :todo))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", task: task, changeset: changeset)
     end

@@ -18,7 +18,7 @@
       <td><%= user.role.name %> </td>
 
       <td class="text-right">
-        <%= if user.role.name != "Admin" do %>
+        <%= if @current_user && user.role.name != "Admin" do %>
           <%= if @current_user.role.name == "Manager" && @current_user.id != user.id do %>
           <span><%= link "Manage", to: user_path(@conn, :add_managee, %{"user_id" => user.id}), method: :post, class: "btn btn-default btn-xs" %></span>
           <% end %>
@@ -33,6 +33,6 @@
 <% end %>
   </tbody>
 </table>
-<%= if @current_user.role.name == "admin" do %>
+<%= if @current_user && @current_user.role.name == "admin" do %>
 <span><%= link "New User", to: user_path(@conn, :new) %></span>
 <% end %>

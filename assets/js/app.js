@@ -23,95 +23,79 @@ import "moment-timezone";
 
 // import socket from "./socket"
 
-const months = {
-	January: 1,
-	February: 2,
-	March: 3,
-	April: 4,
-	May: 5,
-	June: 6,
-	July: 7,
-	August: 8,
-	
+// function addTimeBlock(start, end) {
+// 	let task_id = parseInt($('#task-id')[0].innerHTML)
 
-}
+// 	let data = {
+// 		time_block: {
+// 			task_id: task_id,
+// 			start: {
+// 				year: start.year(),
+// 				month: start.month(),
+// 				day: start.day(),
+// 				hour: start.hour(),
+// 				minute: start.minute(),
+// 			},
+// 			end: {
+// 				year: end.year(),
+// 				month: end.month(),
+// 				day: end.day(),
+// 				hour: end.hour(),
+// 				minute: end.minute(),
+// 			},
+// 		},
+// 	};
 
-function getStartDate() {
-	let year = $('#task_start_year')[0].selectedOptions[0].innerHTML;
-	let month = $('#task_start_month')[0].selectedOptions[0].innerHTML;
-	let day = $('#task_start_day')[0].selectedOptions[0].innerHTML;
-	let hour = $('#task_start_hour')[0].selectedOptions[0].innerHTML;
-	let minute = $('#task_start_minute')[0].selectedOptions[0].innerHTML;
-	return moment().utc().year(year).month(month+1).date(day).hour(hour).minute(minute);
-}
+// 	console.log(data);
 
-function getEndDate() {
-	let year = $('#task_end_year')[0].selectedOptions[0].innerHTML;
-	let month = $('#task_end_month')[0].selectedOptions[0].innerHTML;
-	let day = $('#task_end_day')[0].selectedOptions[0].innerHTML;
-	let hour = $('#task_end_hour')[0].selectedOptions[0].innerHTML;
-	let minute = $('#task_end_minute')[0].selectedOptions[0].innerHTML;
-	return moment().utc().year(year).month(month+1).date(day).hour(hour).minute(minute);
-}
+// 	data = JSON.stringify(data);
 
-function addTimeBlock(start, end) {
-	let task_id = parseInt($('#task-id')[0].innerHTML)
+// 	$.ajax(time_block_path, {
+// 		method: "post",
+// 		dataType: "json",
+// 		contentType: "application/json; charset=UTF-8",
+// 		data: data,
+// 		success: (resp) => {$('#timeblock-error')[0].innerHTML = "Success!";},
 
+// 	});
+// }
+
+function startStopTimeBlock(button, task_id, action) {
+
+	//%{"params" => %{"action" => action, "task_id" => task_id}}
 	let data = {
-		time_block: {
+		params: {
+			action: action,
 			task_id: task_id,
-			start: {
-				year: start.year(),
-				month: start.month(),
-				day: start.day(),
-				hour: start.hour(),
-				minute: start.minute(),
-			},
-			end: {
-				year: end.year(),
-				month: end.month(),
-				day: end.day(),
-				hour: end.hour(),
-				minute: end.minute(),
-			},
-		},
-	};
-
-	console.log(data);
+		}
+	}
 
 	data = JSON.stringify(data);
 
-	$.ajax(time_block_path, {
+	$.ajax(time_block_api_path + "/startstop", {
 		method: "post",
 		dataType: "json",
 		contentType: "application/json; charset=UTF-8",
 		data: data,
-		success: (resp) => {$('#timeblock-error')[0].innerHTML = "Success!";},
-
+		success: (resp) => {location.reload()},
 	});
 }
 
 
 function init() {
-	if (!$('.timeblock-button')) {
-		return;
+	if ($('.start-button')) {
+		$('.start-button').click(function() {
+		//this.data = "data";
+		startStopTimeBlock(this, this.dataset.taskId, "start");
+		});
 	}
 
-	$('.timeblock-button').click(function() {
-		let start = getStartDate();
-		let end = getEndDate();
-		if (start.isBefore(end)) {
-			$('#timeblock-error')[0].innerHTML = "Submitted!";
-			addTimeBlock(start, end);
-
-		} else {
-			$('#timeblock-error')[0].innerHTML = "Error: Start must be before End!";
-		}
-		return;
-	});
-
-
-
+	if ($('.stop-button')) {
+		$('.stop-button').click(function() {
+		//this.data = "data";
+		startStopTimeBlock(this, this.dataset.taskId, "stop");
+		});
+	}
 }
 
 $(init);

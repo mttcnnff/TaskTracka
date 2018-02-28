@@ -5,8 +5,8 @@ defmodule Tasktracka.Tracker.TimeBlock do
 
 
   schema "timeblocks" do
-    field :end, :utc_datetime
-    field :start, :utc_datetime
+    field :end, :naive_datetime
+    field :start, :naive_datetime
     field :task_id, :integer
 
     timestamps()
@@ -14,10 +14,8 @@ defmodule Tasktracka.Tracker.TimeBlock do
 
   @doc false
   def changeset(%TimeBlock{} = time_block, attrs) do
-    # IO.puts("#{inspect(attrs)}")
-    IO.puts("#{inspect(%TimeBlock{} |> cast(attrs, [:task_id, :start, :end]))}")
     time_block
     |> cast(attrs, [:task_id, :start, :end])
-    |> validate_required([:task_id, :start, :end])
+    |> validate_required([:task_id, :start])
   end
 end

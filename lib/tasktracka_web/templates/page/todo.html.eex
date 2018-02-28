@@ -1,20 +1,37 @@
 <div class="row">
 	<div class="col">
+		<%= if @current_user.role.name do %>
+			<h1>Team Task Report</h1>
+			<%= link "Edit Team", to: user_path(@conn, :index), class: "btn btn-primary btn-xs"%>
+		<% else %>
 		<h1>My Tasks</h1>
+		<% end %>
 		<div style="height: 500px; overflow-y: auto;">
 			<%= Enum.map @tasks, fn task -> %>
 				<div class="card" style="margin-bottom: 10px">
 					<div class="card-header">
 						<h5 class="task-heading"><%= task.title%></h5>
 						<%= if task.is_completed do %>
-						<h6 class="task-heading text-success">Completed in <%= task.minutes_worked %> minutes - <%= task.user.name %></h6>
+							<h6 class="task-heading text-success">Completed</h6>
 						<% else %>
-						<h6 class="task-heading">In Progress for <%= task.minutes_worked %> minutes - <%= task.user.name %></h6>
+							<%= if task.in_progress do %>
+								<h6 class="task-heading text-warning">In Progress</h6>
+							<% else %>
+								<h6 class="task-heading text-danger">Not In Progress</h6>
+							<% end %>
+						
 						<% end %>
 					</div>
 					<div class="card-body">
 						<p class="card-text"><%= task.description %></p>
-						<%= link "Edit", to: page_path(@conn, :edit_todo, task), class: "btn btn-primary btn-xs"%>
+						<%= if !task.is_completed do %>
+							<%= if task.in_progress do %>
+								<button class="btn btn-danger btn-xs stop-button" data-task-id="<%= task.id %>">Stop</button>
+							<% else %>
+								<button class="btn btn-success btn-xs start-button" data-task-id="<%= task.id %>">Start</button>
+							<% end %>
+						<% end %>
+						<%= link "Edit", to: task_path(@conn, :edit, task), class: "btn btn-primary btn-xs"%>
 						<%= link "Delete", to: page_path(@conn, :delete_todo, task), method: :delete_todo, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
 					</div>
 				</div>

@@ -8,6 +8,7 @@ defmodule TasktrackaWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug NavigationHistory.Tracker
   end
 
   def get_current_user(conn, _params) do
@@ -47,15 +48,14 @@ defmodule TasktrackaWeb.Router do
     get "/admin/update", AdminController, :make_manager
     get "/admin/remove_manager", AdminController, :remove_manager
     get "/admin/list_manages", AdminController, :list_manages
-  end
 
-  scope "/api/v1", TasktrackaWeb do
-    pipe_through :api
-    resources "/timeblocks", TimeBlockController, except: [:new, :edit]
+    resources "/timeblocks", TimeBlockController
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", TasktrackaWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TasktrackaWeb do
+    pipe_through :api
+    resources "/timeblocks", TimeBlockApiController, except: [:new, :edit]
+    post "/timeblocks/startstop", TimeBlockApiController, :startstop
+  end
 end

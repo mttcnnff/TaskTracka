@@ -141,6 +141,12 @@ defmodule Tasktracka.Tracker do
     Repo.all(TimeBlock)
   end
 
+  def list_timeblocks_by_id(id) do
+    query = from tb in TimeBlock, where: tb.task_id == ^id,
+    select: tb
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single time_block.
 
@@ -156,6 +162,11 @@ defmodule Tasktracka.Tracker do
 
   """
   def get_time_block!(id), do: Repo.get!(TimeBlock, id)
+
+  def get_open_time_block(task_id) do
+    query = from tb in TimeBlock, where: tb.task_id == ^task_id and is_nil(tb.end)
+    query |> first |> Repo.one
+  end
 
   @doc """
   Creates a time_block.

@@ -1,12 +1,4 @@
-<script>
-	window.time_block_path = "<%= time_block_path(@conn, :index) %>"
-	window.current_user_id = "<%= @current_user.id %>"
-</script>
-
-
 <h2>Edit Task: <span id="task-id"><%= @task.id%></span></h2>
 
 <%= render "form.html", Map.put(assigns, :action, task_path(@conn, :update, @task)) %>
 <%= render TasktrackaWeb.TimeBlockView, "index.html", assigns %>
-
-<span><%= link "Back", to: task_path(@conn, :index) %></span>

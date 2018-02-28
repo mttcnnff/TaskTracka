@@ -1,0 +1,23 @@
+<h2>Show Time block</h2>
+
+<ul>
+
+  <li>
+    <strong>Task:</strong>
+    <%= @time_block.task_id %>
+  </li>
+
+  <li>
+    <strong>Start:</strong>
+    <%= @time_block.start %>
+  </li>
+
+  <li>
+    <strong>End:</strong>
+    <%= @time_block.end %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: time_block_path(@conn, :edit, @time_block) %></span>
+<span><%= link "Back", to: time_block_path(@conn, :index) %></span>

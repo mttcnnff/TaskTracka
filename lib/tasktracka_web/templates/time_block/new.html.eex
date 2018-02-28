@@ -1,0 +1,14 @@
+<h2>New Time block
+<%= if assigns.task_id != nil do %>
+    for Task <%= assigns.task_id %>
+ <% end %>
+
+</h2>
+
+<%= if assigns.task_id == nil do %>
+<%= render "form.html", Map.put(assigns, :action, time_block_path(@conn, :create)) %>
+<% else %>
+<%= render "form.html", Map.put(assigns, :action, time_block_path(@conn, :create, %{"task_id" => assigns.task_id})) %>
+<% end %>
+
+<span><%= link "Back", to: time_block_path(@conn, :index) %></span>

@@ -1,20 +1,42 @@
-<h2>Listing Timeblocks</h2>
-<%= form_for @changeset, nil, fn f -> %>
+<h2>Listing Timeblocks
+  <%= if assigns.task != nil do %>
+    for Task <%= assigns.task.id %>
+  <% end %>
+</h2>
 
-  <div class="form-group">
-    <%= label f, :start, class: "control-label" %>
-    <%= datetime_select f, :start %>
-    <%= error_tag f, :start %>
-  </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Start (UTC)</th>
+      <th>End (UTC)</th>
 
-  <div class="form-group">
-    <%= label f, :end, class: "control-label" %>
-    <%= datetime_select f, :end %>
-    <%= error_tag f, :end %>
-  </div>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for time_block <- @timeblocks do %>
+    <tr>
+      <td><%= time_block.task_id %></td>
+      <td><%= time_block.start %></td>
+      <td><%= time_block.end %></td>
 
-  <div class="form-group">
-    <button type="button" class="btn btn-primary timeblock-button">Make Timeblock</button>
-    <span id="timeblock-error"></span>
-  </div>
+      <td class="text-right">
+        <span><%= link "Show", to: time_block_path(@conn, :show, time_block), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: time_block_path(@conn, :edit, time_block), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: time_block_path(@conn, :delete, time_block), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
 <% end %>
+  </tbody>
+</table>
+
+<%= if assigns.task != nil do %>
+<span><%= link "New Time block", to: time_block_path(@conn, :new, %{"task_id" => @task.id}) %></span>
+  
+<% else %>
+<% IO.puts("We dont have a task") %>
+<span><%= link "New Time block", to: time_block_path(@conn, :new) %></span>
+
+<% end %>
+

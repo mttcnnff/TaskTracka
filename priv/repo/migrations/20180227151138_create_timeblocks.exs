@@ -4,8 +4,8 @@ defmodule Tasktracka.Repo.Migrations.CreateTimeblocks do
   def change do
     create table(:timeblocks) do
       add :task_id, :integer
-      add :start, :utc_datetime
-      add :end, :utc_datetime
+      add :start, :naive_datetime
+      add :end, :naive_datetime
 
       timestamps()
     end
