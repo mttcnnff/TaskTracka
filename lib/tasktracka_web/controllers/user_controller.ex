@@ -3,6 +3,7 @@ defmodule TasktrackaWeb.UserController do
 
   alias Tasktracka.Accounts
   alias Tasktracka.Accounts.User
+  alias Tasktracka.RoleManager
 
   def index(conn, _params) do
     users = Accounts.list_users()
@@ -15,12 +16,15 @@ defmodule TasktrackaWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
+    role_id = RoleManager.get_role_by_name("User").id
+    user_params = Map.put(user_params, "role_id", role_id)
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: page_path(conn, :index))
       {:error, %Ecto.Changeset{} = changeset} ->
+        IO.puts("#{inspect(changeset)}")
         render(conn, "new.html", changeset: changeset)
     end
   end
